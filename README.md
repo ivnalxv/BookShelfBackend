@@ -54,5 +54,3 @@ public Flux<BookDeposit> getNearest(
 ### Результат:
 
 Примеры ответа сервера на запросы:
-
-![img](src/main/resources/static/pictures/nearestResponce.png)
