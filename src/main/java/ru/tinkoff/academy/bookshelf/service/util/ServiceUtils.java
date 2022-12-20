@@ -4,7 +4,12 @@ import lombok.NonNull;
 import ru.tinkoff.academy.bookshelf.domain.dao.Depository;
 import ru.tinkoff.academy.bookshelf.domain.dto.BookDeposit;
 
+import java.util.Random;
+import java.util.UUID;
+
 public class ServiceUtils {
+
+    private static final Random random = new Random();
     private static double square(double a) {
         return a * a;
     }
@@ -38,5 +43,18 @@ public class ServiceUtils {
                 depository.getLatitude()
                         + ", " + depository.getLongitude()
                 );
+    }
+
+    public static Depository generateRandomDepository() {
+        return new Depository(UUID.randomUUID(), "", "", "", "", 1, 1);
+    }
+
+
+    public static String generateRandomAlphabeticString(int size) {
+        return String.valueOf(size);
+    }
+
+    public static int randomInt(int size) {
+        return random.nextInt(size);
     }
 }
