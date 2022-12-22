@@ -1,4 +1,4 @@
-package ru.tinkoff.academy.bookshelf.domain.dto;
+package ru.tinkoff.academy.bookshelf.dao;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,11 +8,12 @@ import java.util.UUID;
 @Getter
 @Setter
 @AllArgsConstructor
-public class BookDeposit {
+public class Depository {
     private UUID id;
     private String nick;
     private String address;
     private String description;
     private String type;
-    private String location;
+    private double latitude;
+    private double longitude;
 }

@@ -1,8 +1,6 @@
 package ru.tinkoff.academy.bookshelf.service.util;
 
-import lombok.NonNull;
-import ru.tinkoff.academy.bookshelf.domain.dao.Depository;
-import ru.tinkoff.academy.bookshelf.domain.dto.BookDeposit;
+import ru.tinkoff.academy.bookshelf.dao.Depository;
 
 public class ServiceUtils {
     private static double square(double a) {
@@ -26,17 +24,5 @@ public class ServiceUtils {
                 depository.getLongitude(),
                 latitude,
                 longitude);
-    }
-
-    public static BookDeposit castToBookDeposit(@NonNull Depository depository) {
-        return new BookDeposit(
-                depository.getId(),
-                depository.getNick(),
-                depository.getAddress(),
-                depository.getDescription(),
-                depository.getType(),
-                depository.getLatitude()
-                        + ", " + depository.getLongitude()
-                );
     }
 }
