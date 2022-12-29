@@ -7,7 +7,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
 public class WebClientConfiguration {
-    @Value("${my.default.local.url}")
+    @Value("${default.url}")
     private String DEFAULT_LOCAL_URL;
     @Bean
     public WebClient createLocalWebClient() {

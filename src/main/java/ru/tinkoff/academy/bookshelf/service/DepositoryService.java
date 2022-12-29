@@ -1,11 +1,12 @@
 package ru.tinkoff.academy.bookshelf.service;
 
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
-import ru.tinkoff.academy.bookshelf.dao.Depository;
-import ru.tinkoff.academy.bookshelf.dto.BookDepositDto;
-import ru.tinkoff.academy.bookshelf.service.util.ObjectMapperUtils;
-import ru.tinkoff.academy.bookshelf.service.util.ServiceUtils;
+import ru.tinkoff.academy.bookshelf.entity.Depository;
+import ru.tinkoff.academy.bookshelf.entity.BookDepositDto;
+import ru.tinkoff.academy.bookshelf.mapper.BookDepositDtoMapper;
+import ru.tinkoff.academy.bookshelf.utils.DepositoryServiceUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,13 +15,17 @@ import java.util.UUID;
 
 
 @Service
+@AllArgsConstructor
 public class DepositoryService {
+    private BookDepositDtoMapper bookDepositDtoMapper;
+
     private final List<Depository> depositories = new ArrayList<>(){
         {
-            add(new Depository(UUID. randomUUID(), "1", "", "", "", 0, 0));
-            add(new Depository(UUID. randomUUID(), "2", "", "", "", 1, 0));
-            add(new Depository(UUID. randomUUID(), "3", "", "", "", 2, 0));
-            add(new Depository(UUID. randomUUID(), "4", "", "", "", 0, 2));
+            Depository.DepositoryBuilder builder = Depository.builder();
+            add(builder.id(UUID.randomUUID()).nick("1").latitude(0).longitude(0).build());
+            add(builder.id(UUID.randomUUID()).nick("2").latitude(1).longitude(0).build());
+            add(builder.id(UUID.randomUUID()).nick("3").latitude(2).longitude(0).build());
+            add(builder.id(UUID.randomUUID()).nick("4").latitude(0).longitude(2).build());
         }
     };
 
@@ -30,7 +35,7 @@ public class DepositoryService {
             long amount
     ) {
         Depository depository = getDepositoryById(id);
-        if (depository == null) {
+        if (Objects.isNull(depository)) {
             return Flux.just();
         }
 
@@ -48,20 +53,18 @@ public class DepositoryService {
             long amount
     ) {
         depositories.sort((o1, o2) -> {
-            double dist1 = ServiceUtils.calculateDistance(o1, latitude, longitude);
-            double dist2 = ServiceUtils.calculateDistance(o2, latitude, longitude);
+            double dist1 = DepositoryServiceUtils.calculateDistance(o1, latitude, longitude);
+            double dist2 = DepositoryServiceUtils.calculateDistance(o2, latitude, longitude);
             return Double.compare(dist1, dist2);
         });
-
-        System.out.println(depositories);
 
         ArrayList<BookDepositDto> nearestBookDeposits = new ArrayList<>();
         for (int i = 0; i < depositories.size() && i < amount; i++) {
             Depository d = depositories.get(i);
-            if (ServiceUtils.calculateDistance(d, latitude, longitude) > distance) {
+            if (DepositoryServiceUtils.calculateDistance(d, latitude, longitude) > distance) {
                 break;
             }
-            nearestBookDeposits.add(ObjectMapperUtils.fromDepositoryToBookDepositDto(d));
+            nearestBookDeposits.add(bookDepositDtoMapper.entityToDto(d));
         }
 
         return Flux.just(nearestBookDeposits.toArray(new BookDepositDto[0]));
@@ -91,7 +94,16 @@ public class DepositoryService {
         if (checkIfExistsById(id)) {
             return;
         }
-        depositories.add(new Depository(id, nick, address, description, type, latitude, longitude));
+        Depository depository = Depository.builder()
+                .id(id)
+                .nick(nick)
+                .address(address)
+                .description(description)
+                .type(type)
+                .latitude(latitude)
+                .longitude(longitude)
+                .build();
+        depositories.add(depository);
     }
 
     @SuppressWarnings("unused")

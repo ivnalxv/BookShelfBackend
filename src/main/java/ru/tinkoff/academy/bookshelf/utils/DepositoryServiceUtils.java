@@ -1,8 +1,8 @@
-package ru.tinkoff.academy.bookshelf.service.util;
+package ru.tinkoff.academy.bookshelf.utils;
 
-import ru.tinkoff.academy.bookshelf.dao.Depository;
+import ru.tinkoff.academy.bookshelf.entity.Depository;
 
-public class ServiceUtils {
+public class DepositoryServiceUtils {
     private static double square(double a) {
         return a * a;
     }
