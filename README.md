@@ -20,7 +20,7 @@
 
 ### DAO and DTO
 
-Создал DAO ``Depository``, и DTO ``BookDeposit``. Все поля сущности ``BookDeposit`` удовлетворяют условиям ТЗ, именно она будет передаваться контроллером.
+Создал ``Depository``, и ``BookDepositDto``. Все поля сущности ``BookDepositDto`` удовлетворяют условиям ТЗ, именно она будет передаваться контроллером.
 
 Также сделал ``DepositoryController``, отвечающий на запросы по ближайшим шкафам. 
 
@@ -31,7 +31,7 @@
 
 ```
 @GetMapping("shelf/{id}/nearest")
-public Flux<BookDeposit> getNearest(
+public Flux<BookDepositDto> getNearest(
         @PathVariable UUID bookDepositId, 
         @RequestParam(required = false, defaultValue = "100") Long distance,
         @RequestParam(required = false, defaultValue = "50") Long amount,
@@ -43,7 +43,7 @@ public Flux<BookDeposit> getNearest(
 переданными в параметрах запроса
 ```
 @GetMapping("shelf/nearest")
-public Flux<BookDeposit> getNearest(
+public Flux<BookDepositDto> getNearest(
         @RequestParam Double latitude,
         @RequestParam Double longitude,
         @RequestParam(required = false, defaultValue = "250") Long distance,
