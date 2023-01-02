@@ -3,11 +3,11 @@ package ru.tinkoff.academy.bookshelf.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.tinkoff.academy.bookshelf.domain.dao.Depository;
-import ru.tinkoff.academy.bookshelf.service.util.ServiceUtils;
+import ru.tinkoff.academy.bookshelf.entity.Depository;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,14 +19,23 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 public class DepositoryServiceTest {
     @Autowired
     private DepositoryService depositoryService;
-
+    private final Random random = new Random();
 
     private Depository getDepositoryById(UUID id) {
         return depositoryService.getDepositoryById(id);
     }
+
     private Depository takeRandomDepository() {
         List<Depository> depositories = depositoryService.getDepositories();
-        return depositories.get(ServiceUtils.randomInt(depositories.size()));
+        return depositories.get(random.nextInt(depositories.size()));
+    }
+
+    public static Depository generateRandomDepository() {
+        return Depository.builder()
+                .id(UUID.randomUUID())
+                .longitude(1)
+                .latitude(1)
+                .build();
     }
 
     private boolean checkIfExistsById(UUID id) {
@@ -51,7 +60,7 @@ public class DepositoryServiceTest {
     @Test
     public void createDepositoryTest() {
         // given
-        Depository createdDepository = ServiceUtils.generateRandomDepository();
+        Depository createdDepository = generateRandomDepository();
 
         // when
         depositoryService.createDepository(
@@ -73,15 +82,18 @@ public class DepositoryServiceTest {
         Depository updatedDepository = takeRandomDepository();
 
         // when
-        Depository clonedDepository = new Depository(
-                updatedDepository.getId(),
-                updatedDepository.getNick(),
-                updatedDepository.getAddress(),
-                updatedDepository.getDescription(),
-                updatedDepository.getType(),
-                updatedDepository.getLatitude(),
-                updatedDepository.getLongitude());
-        updatedDepository.setNick(ServiceUtils.generateRandomAlphabeticString(9));
+        Depository.DepositoryBuilder builder = Depository.builder()
+                .id(updatedDepository.getId())
+                .nick(updatedDepository.getNick())
+                .address(updatedDepository.getAddress())
+                .description(updatedDepository.getDescription())
+                .type(updatedDepository.getType())
+                .latitude(updatedDepository.getLatitude())
+                .longitude(updatedDepository.getLongitude());
+
+        Depository clonedDepository = builder.build();
+
+        updatedDepository = builder.nick("0123456789").build();
         depositoryService.updateDepository(clonedDepository.getId(), updatedDepository);
 
         // then

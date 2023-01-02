@@ -10,7 +10,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Depository {
     private UUID id;
-    private String nick;
+    @Builder.Default private String nick = "placeholder";
     @Builder.Default private String address = "Address hidden";
     @Builder.Default private String description = "No description provided";
     @Builder.Default private String type = "bookshelf";
