@@ -4,6 +4,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 public class SystemControllerTest extends BaseControllerTest {
+
+    private void checkIfSystemStatusUp(WebTestClient.ResponseSpec response) {
+        checkIfResponseSuccessfulAndJson(response);
+        response.expectBody().jsonPath("$.status").isEqualTo("UP");
+    }
+
+    private void checkIfSystemVersionCorrect(WebTestClient.ResponseSpec response) {
+        checkIfResponseSuccessfulAndJson(response);
+        response.expectBody().jsonPath("$.build.version").isEqualTo("0.0.1-SNAPSHOT");
+    }
+
     @Test
     public void readinessTest() {
         // when
@@ -28,7 +39,7 @@ public class SystemControllerTest extends BaseControllerTest {
         WebTestClient.ResponseSpec response = getResponseSpecFromURI("/system/version");
 
         // then
-        checkIfSystemStatusUp(response);
+        checkIfSystemVersionCorrect(response);
     }
 
 }

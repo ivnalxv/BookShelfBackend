@@ -17,7 +17,7 @@ public class MockDepositoryRepository implements DepositoryRepository {
         for (int i = 0; i < 10; i++) {
             Depository depository = Depository.builder()
                     .id(UUID.randomUUID())
-                    .nick(generateRandomAlphabeticString(10))
+                    .nick(generateRandomAlphabeticString(random.nextInt(5, 10)))
                     .longitude(random.nextInt(10))
                     .latitude(random.nextInt(10))
                     .build();
