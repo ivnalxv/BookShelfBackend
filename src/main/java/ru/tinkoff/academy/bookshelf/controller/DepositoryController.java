@@ -3,7 +3,7 @@ package ru.tinkoff.academy.bookshelf.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
-import ru.tinkoff.academy.bookshelf.entity.BookDepositDto;
+import ru.tinkoff.academy.bookshelf.dto.BookDepositDto;
 import ru.tinkoff.academy.bookshelf.service.DepositoryService;
 import java.util.UUID;
 

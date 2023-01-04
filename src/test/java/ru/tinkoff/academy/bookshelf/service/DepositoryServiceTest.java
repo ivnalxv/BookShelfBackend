@@ -25,7 +25,7 @@ public class DepositoryServiceTest {
         return depositoryService.getDepositoryById(id);
     }
 
-    private Depository takeRandomDepository() {
+    private Depository givenRandomDepository() {
         List<Depository> depositories = depositoryService.getDepositories();
         return depositories.get(random.nextInt(depositories.size()));
     }
@@ -45,10 +45,18 @@ public class DepositoryServiceTest {
         return !Objects.isNull(getDepositoryById(id));
     }
 
+    private void thenUserExists(UUID id) {
+        assertTrue(checkIfExistsById(id));
+    }
+
+    private void thenUserNotExists(UUID id) {
+        assertFalse(checkIfExistsById(id));
+    }
+
     @Test
     public void getDepositoryByIdTest() {
         // given
-        Depository guessDepository = takeRandomDepository();
+        Depository guessDepository = givenRandomDepository();
 
         // when
         Depository presumedDepository = getDepositoryById(guessDepository.getId());
@@ -73,13 +81,13 @@ public class DepositoryServiceTest {
                 createdDepository.getLongitude());
 
         // then
-        assertTrue(checkIfExistsById(createdDepository.getId()));
+        thenUserExists(createdDepository.getId());
     }
 
     @Test
     public void updateDepositoryTest() {
         // given
-        Depository updatedDepository = takeRandomDepository();
+        Depository updatedDepository = givenRandomDepository();
 
         // when
         Depository.DepositoryBuilder builder = Depository.builder()
@@ -106,13 +114,13 @@ public class DepositoryServiceTest {
     @Test
     public void deleteDepositoryTest() {
         // given
-        Depository takenDepository = takeRandomDepository();
+        Depository givenDepository = givenRandomDepository();
 
         // when
-        UUID id = takenDepository.getId();
+        UUID id = givenDepository.getId();
+        depositoryService.deleteDepository(id);
 
         // then
-        depositoryService.deleteDepository(id);
-        assertFalse(checkIfExistsById(id));
+        thenUserNotExists(id);
     }
 }

@@ -5,12 +5,12 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 public class SystemControllerTest extends BaseControllerTest {
 
-    private void checkIfSystemStatusUp(WebTestClient.ResponseSpec response) {
+    private void thenSystemStatusUp(WebTestClient.ResponseSpec response) {
         checkIfResponseSuccessfulAndJson(response);
         response.expectBody().jsonPath("$.status").isEqualTo("UP");
     }
 
-    private void checkIfSystemVersionCorrect(WebTestClient.ResponseSpec response) {
+    private void thenSystemVersionCorrect(WebTestClient.ResponseSpec response) {
         checkIfResponseSuccessfulAndJson(response);
         response.expectBody().jsonPath("$.build.version").isEqualTo("0.0.1-SNAPSHOT");
     }
@@ -21,7 +21,7 @@ public class SystemControllerTest extends BaseControllerTest {
         WebTestClient.ResponseSpec response = getResponseSpecFromURI("/system/readiness");
 
         // then
-        checkIfSystemStatusUp(response);
+        thenSystemStatusUp(response);
     }
 
     @Test
@@ -30,7 +30,7 @@ public class SystemControllerTest extends BaseControllerTest {
         WebTestClient.ResponseSpec response = getResponseSpecFromURI("/system/liveness");
 
         // then
-        checkIfSystemStatusUp(response);
+        thenSystemStatusUp(response);
     }
 
     @Test
@@ -39,7 +39,7 @@ public class SystemControllerTest extends BaseControllerTest {
         WebTestClient.ResponseSpec response = getResponseSpecFromURI("/system/version");
 
         // then
-        checkIfSystemVersionCorrect(response);
+        thenSystemVersionCorrect(response);
     }
 
 }

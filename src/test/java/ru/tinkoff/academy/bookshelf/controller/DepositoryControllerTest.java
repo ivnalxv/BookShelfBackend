@@ -15,12 +15,12 @@ public class DepositoryControllerTest extends BaseControllerTest {
     private DepositoryService depositoryService;
     private final Random random = new Random();
 
-    private Depository takeRandomDepository() {
+    private Depository givenRandomDepository() {
         List<Depository> depositories = depositoryService.getDepositories();
         return depositories.get(random.nextInt(depositories.size()));
     }
 
-    private void checkIfResponseJsonEqualsDepositories(WebTestClient.ResponseSpec response) {
+    private void thenResponseJsonEqualsDepositories(WebTestClient.ResponseSpec response) {
         checkIfResponseSuccessfulAndJson(response);
         WebTestClient.BodyContentSpec body = response.expectBody();
         List<Depository> depositories = depositoryService.getDepositories();
@@ -32,7 +32,7 @@ public class DepositoryControllerTest extends BaseControllerTest {
     @Test
     public void getNearestByDepositoryIdTest() {
         // given
-        Depository depository = takeRandomDepository();
+        Depository depository = givenRandomDepository();
 
         // when
         WebTestClient.ResponseSpec response = getResponseSpecFromUriBuilder(
@@ -40,7 +40,7 @@ public class DepositoryControllerTest extends BaseControllerTest {
         );
 
         // then
-        checkIfResponseJsonEqualsDepositories(response);
+        thenResponseJsonEqualsDepositories(response);
     }
 
     @Test
@@ -54,6 +54,6 @@ public class DepositoryControllerTest extends BaseControllerTest {
         );
 
         // then
-        checkIfResponseJsonEqualsDepositories(response);
+        thenResponseJsonEqualsDepositories(response);
     }
 }

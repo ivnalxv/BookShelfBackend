@@ -2,7 +2,7 @@ package ru.tinkoff.academy.bookshelf.mapper;
 
 import org.springframework.stereotype.Component;
 import ru.tinkoff.academy.bookshelf.entity.Depository;
-import ru.tinkoff.academy.bookshelf.entity.BookDepositDto;
+import ru.tinkoff.academy.bookshelf.dto.BookDepositDto;
 
 @Component
 public class BookDepositDtoMapper implements DtoMapper<Depository, BookDepositDto> {
