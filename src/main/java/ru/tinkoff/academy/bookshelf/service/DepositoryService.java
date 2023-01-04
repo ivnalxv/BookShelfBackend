@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import ru.tinkoff.academy.bookshelf.entity.Depository;
-import ru.tinkoff.academy.bookshelf.entity.BookDepositDto;
+import ru.tinkoff.academy.bookshelf.dto.BookDepositDto;
 import ru.tinkoff.academy.bookshelf.mapper.BookDepositDtoMapper;
 import ru.tinkoff.academy.bookshelf.repository.DepositoryRepository;
 import ru.tinkoff.academy.bookshelf.utils.DepositoryServiceUtils;
