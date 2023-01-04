@@ -6,6 +6,7 @@ import reactor.core.publisher.Flux;
 import ru.tinkoff.academy.bookshelf.entity.Depository;
 import ru.tinkoff.academy.bookshelf.dto.BookDepositDto;
 import ru.tinkoff.academy.bookshelf.mapper.BookDepositDtoMapper;
+import ru.tinkoff.academy.bookshelf.repository.DepositoryRepository;
 import ru.tinkoff.academy.bookshelf.utils.DepositoryServiceUtils;
 
 import java.util.ArrayList;
@@ -18,16 +19,8 @@ import java.util.UUID;
 @AllArgsConstructor
 public class DepositoryService {
     private BookDepositDtoMapper bookDepositDtoMapper;
+    private DepositoryRepository repository;
 
-    private final List<Depository> depositories = new ArrayList<>(){
-        {
-            Depository.DepositoryBuilder builder = Depository.builder();
-            add(builder.id(UUID.randomUUID()).nick("1").latitude(0).longitude(0).build());
-            add(builder.id(UUID.randomUUID()).nick("2").latitude(1).longitude(0).build());
-            add(builder.id(UUID.randomUUID()).nick("3").latitude(2).longitude(0).build());
-            add(builder.id(UUID.randomUUID()).nick("4").latitude(0).longitude(2).build());
-        }
-    };
 
     public Flux<BookDepositDto> getNearestBookDeposits(
             UUID id,
@@ -62,7 +55,7 @@ public class DepositoryService {
     }
 
     public List<Depository> getDepositories() {
-        return depositories;
+        return repository.findAll();
     }
 
     public Depository getDepositoryById(UUID id) {
@@ -94,7 +87,7 @@ public class DepositoryService {
                 .latitude(latitude)
                 .longitude(longitude)
                 .build();
-        depositories.add(depository);
+        repository.findAll().add(depository);
     }
 
     @SuppressWarnings("unused")
@@ -102,6 +95,7 @@ public class DepositoryService {
         if (!checkIfExistsById(id)) {
             return;
         }
+        List<Depository> depositories = repository.findAll();
         depositories.set(depositories.indexOf(getDepositoryById(id)), depository);
     }
 
@@ -110,7 +104,33 @@ public class DepositoryService {
         if (!checkIfExistsById(id)) {
             return;
         }
-        depositories.remove(getDepositoryById(id));
+        repository.findAll().remove(getDepositoryById(id));
+    }
+
+    private void sortingDepositoriesByDistance(double latitude, double longitude) {
+        repository.findAll().sort((o1, o2) -> {
+            double dist1 = DepositoryServiceUtils.calculateDistance(o1, latitude, longitude);
+            double dist2 = DepositoryServiceUtils.calculateDistance(o2, latitude, longitude);
+            return Double.compare(dist1, dist2);
+        });
+    }
+
+    private List<BookDepositDto> getNearestFromSortedDepositories(
+            double latitude,
+            double longitude,
+            long distance,
+            long amount
+    ) {
+        List<Depository> depositories = repository.findAll();
+        ArrayList<BookDepositDto> nearestBookDeposits = new ArrayList<>();
+        for (int i = 0; i < depositories.size() && i < amount; i++) {
+            Depository d = depositories.get(i);
+            if (DepositoryServiceUtils.calculateDistance(d, latitude, longitude) > distance) {
+                break;
+            }
+            nearestBookDeposits.add(bookDepositDtoMapper.entityToDto(d));
+        }
+        return nearestBookDeposits;
     }
 
     private void sortingDepositoriesByDistance(double latitude, double longitude) {
