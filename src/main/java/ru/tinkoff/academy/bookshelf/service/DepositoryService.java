@@ -45,23 +45,13 @@ public class DepositoryService {
             long distance,
             long amount
     ) {
-        List<Depository> depositories = repository.findAll();
-        depositories.sort((o1, o2) -> {
-            double dist1 = DepositoryServiceUtils.calculateDistance(o1, latitude, longitude);
-            double dist2 = DepositoryServiceUtils.calculateDistance(o2, latitude, longitude);
-            return Double.compare(dist1, dist2);
-        });
-
-        ArrayList<BookDepositDto> nearestBookDeposits = new ArrayList<>();
-        for (int i = 0; i < depositories.size() && i < amount; i++) {
-            Depository d = depositories.get(i);
-            if (DepositoryServiceUtils.calculateDistance(d, latitude, longitude) > distance) {
-                break;
-            }
-            nearestBookDeposits.add(bookDepositDtoMapper.entityToDto(d));
-        }
-
-        return Flux.just(nearestBookDeposits.toArray(new BookDepositDto[0]));
+        sortingDepositoriesByDistance(latitude, longitude);
+        return Flux.just(getNearestFromSortedDepositories(
+                latitude,
+                longitude,
+                distance,
+                amount
+        ).toArray(new BookDepositDto[0]));
     }
 
     public List<Depository> getDepositories() {
@@ -115,6 +105,32 @@ public class DepositoryService {
             return;
         }
         repository.findAll().remove(getDepositoryById(id));
+    }
+
+    private void sortingDepositoriesByDistance(double latitude, double longitude) {
+        repository.findAll().sort((o1, o2) -> {
+            double dist1 = DepositoryServiceUtils.calculateDistance(o1, latitude, longitude);
+            double dist2 = DepositoryServiceUtils.calculateDistance(o2, latitude, longitude);
+            return Double.compare(dist1, dist2);
+        });
+    }
+
+    private List<BookDepositDto> getNearestFromSortedDepositories(
+            double latitude,
+            double longitude,
+            long distance,
+            long amount
+    ) {
+        List<Depository> depositories = repository.findAll();
+        ArrayList<BookDepositDto> nearestBookDeposits = new ArrayList<>();
+        for (int i = 0; i < depositories.size() && i < amount; i++) {
+            Depository d = depositories.get(i);
+            if (DepositoryServiceUtils.calculateDistance(d, latitude, longitude) > distance) {
+                break;
+            }
+            nearestBookDeposits.add(bookDepositDtoMapper.entityToDto(d));
+        }
+        return nearestBookDeposits;
     }
 
     private boolean checkIfExistsById(UUID id) {

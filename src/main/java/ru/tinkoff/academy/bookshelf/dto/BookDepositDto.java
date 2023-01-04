@@ -10,8 +10,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class BookDepositDto {
     private UUID id;
-    @Builder.Default
-    private String nick = "placeholder";
+    private String nick;
     @Builder.Default
     private String address = "Address hidden";
     @Builder.Default
