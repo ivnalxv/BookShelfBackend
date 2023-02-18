@@ -18,7 +18,7 @@ public class SystemControllerTest extends BaseControllerTest {
     @Test
     public void readinessTest() {
         // when
-        WebTestClient.ResponseSpec response = getResponseSpecFromURI("/system/readiness");
+        WebTestClient.ResponseSpec response = whenReceiveResponseSpecFromURI("/system/readiness");
 
         // then
         thenSystemStatusUp(response);
@@ -27,7 +27,7 @@ public class SystemControllerTest extends BaseControllerTest {
     @Test
     public void livenessTest() {
         // when
-        WebTestClient.ResponseSpec response = getResponseSpecFromURI("/system/liveness");
+        WebTestClient.ResponseSpec response = whenReceiveResponseSpecFromURI("/system/liveness");
 
         // then
         thenSystemStatusUp(response);
@@ -36,7 +36,7 @@ public class SystemControllerTest extends BaseControllerTest {
     @Test
     public void versionTest() {
         // when
-        WebTestClient.ResponseSpec response = getResponseSpecFromURI("/system/version");
+        WebTestClient.ResponseSpec response = whenReceiveResponseSpecFromURI("/system/version");
 
         // then
         thenSystemVersionCorrect(response);

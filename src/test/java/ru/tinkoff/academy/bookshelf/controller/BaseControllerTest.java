@@ -17,11 +17,11 @@ public class BaseControllerTest {
     @Autowired
     protected WebTestClient webTestClient;
 
-    protected WebTestClient.ResponseSpec getResponseSpecFromURI(String uri) {
+    protected WebTestClient.ResponseSpec whenReceiveResponseSpecFromURI(String uri) {
         return webTestClient.get().uri(uri).accept(MediaType.APPLICATION_JSON).exchange();
     }
 
-    protected WebTestClient.ResponseSpec getResponseSpecFromUriBuilder(Function<UriBuilder, URI> builder) {
+    protected WebTestClient.ResponseSpec whenReceiveResponseSpecFromUriBuilder(Function<UriBuilder, URI> builder) {
         return webTestClient.get().uri(builder).accept(MediaType.APPLICATION_JSON).exchange();
     }
 
@@ -30,7 +30,7 @@ public class BaseControllerTest {
     }
 
     protected void checkIfResponseJson(WebTestClient.ResponseSpec response) {
-        response.expectHeader().contentType(MediaType.APPLICATION_JSON);
+        response.expectHeader().contentTypeCompatibleWith(MediaType.APPLICATION_JSON);
     }
 
     protected void checkIfResponseSuccessfulAndJson(WebTestClient.ResponseSpec response) {

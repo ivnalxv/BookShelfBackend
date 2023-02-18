@@ -35,7 +35,7 @@ public class DepositoryControllerTest extends BaseControllerTest {
         Depository depository = givenRandomDepository();
 
         // when
-        WebTestClient.ResponseSpec response = getResponseSpecFromUriBuilder(
+        WebTestClient.ResponseSpec response = whenReceiveResponseSpecFromUriBuilder(
             ub -> ub.path("/shelf/{id}/nearest").build(depository.getId())
         );
 
@@ -46,7 +46,7 @@ public class DepositoryControllerTest extends BaseControllerTest {
     @Test
     public void getNearestByCoordinatesTest() {
         // when
-        WebTestClient.ResponseSpec response = getResponseSpecFromUriBuilder(
+        WebTestClient.ResponseSpec response = whenReceiveResponseSpecFromUriBuilder(
                 ub -> ub.path("/shelf/nearest")
                         .queryParam("longitude", 0)
                         .queryParam("latitude", 0)
